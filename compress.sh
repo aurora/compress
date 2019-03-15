@@ -111,11 +111,12 @@ fi
 NAME="$NAME""_$(date -u +"%Y-%m-%dT%H:%M:%SZ")$PFIX"
 FILE="$TARGET/$NAME"
 
-echo "Creating archive: $FILE"
-echo "            from: $SOURCE"
+echo "Creating"
+echo "  archive: $FILE"
+echo "     from: $SOURCE"
 
 if [ "$PREV" != "" ]; then
-    echo "        previous: $PREV"
+    echo " previous: $PREV"
 fi
 
 # @see http://dar.sourceforge.net/doc/mini-howto/dar-differential-backup-mini-howto.en.html#making-a-full-backup-with-dar
@@ -126,19 +127,21 @@ for i in "${NO_COMPRESS[@]}"; do
     Z="$Z -Z \"*.$i\""
 done
 
-dar -m 256 -zbzip2 -y -s 1000G -R "$SOURCE" -c "$FILE" $Z $INCR > /dev/null
+dar -m 256 -zbzip2 -y -s 1000G -R "$SOURCE" -c "$FILE" $Z $INCR /dev/null
+err=$?
 
-if [ $? -ne 0 ]; then
+if [ $err -ne 0 ]; then
     echo "Archive creation FAILED"
-    exit 1
+    exit $err
 fi
 
 dar -t "$FILE" > /dev/null
+err=$?
 
-if [ $? -ne 0 ]; then
+if [ $err -ne 0 ]; then
     echo "Archive created but test FAILED"
-    exit 1
 else
     echo "Archive created and successfully tested"
-    exit 1
 fi
+
+exit $err
