@@ -15,6 +15,7 @@ NO_COMPRESS=(
 NAME=""
 SOURCE=""
 TARGET=""
+SKIP=0
 
 function showusage {
     echo "usage: $(basename $0) [arguments]
@@ -24,6 +25,7 @@ function showusage {
                 of the specified root directory, but cannot be the same.
 -n, --name      Optional name. Defaults to the name of the specified root
                 directory.
+    --skip      Skip test of created archive.
 -h, --help      Display this usage information.
 "
 }
@@ -56,6 +58,9 @@ while [[ "$1" != "" ]]; do
         -n|--name)
             NAME="$2"
             shift
+            ;;
+        --skip)
+            SKIP=1
             ;;
         -h|-\?|--help)
             showusage
@@ -134,14 +139,18 @@ if [ $err -ne 0 ]; then
     exit $err
 fi
 
-dar -t "$FILE" > /dev/null
-err=$?
-
-if [ $err -ne 0 ]; then
-    echo "Archive created but test FAILED"
-    exit $err
-else
-    echo "Archive created and successfully tested"
+if [ $SKIP -eq 1 ]; then
+    echo "Archive created"
     exit 0
-fi
+else
+    dar -t "$FILE" > /dev/null
+    err=$?
 
+    if [ $err -ne 0 ]; then
+        echo "Archive created but test FAILED"
+        exit $err
+    else
+        echo "Archive created and successfully tested"
+        exit 0
+    fi
+fi
