@@ -27,10 +27,12 @@ if [ -e "$TARGET" ]; then
     exit 1
 fi
 
-for i in $(ls -1 "$1"_*_base.1.dar) $(ls -1 $1_*_diff.1.dar); do
+mkdir "$TARGET"
+
+for i in $(ls -1 "$1"_*_base.1.dar 2>/dev/null) $(ls -1 $1_*_diff.1.dar 2>/dev/null); do
     echo "Exctracting $i"
     
-    dar -x "$(dirname $i)/$(basename $i .1.dar)" -O -w -R "$2"
+    dar -x "$(dirname $i)/$(basename $i .1.dar)" -O -w -R "$TARGET"
 done
 
 echo "done."
