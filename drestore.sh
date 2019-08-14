@@ -27,6 +27,7 @@ if [[ "$(basename $1)" =~ ^((.+)_[^_]+_(base|diff))(\.1\.dar)?$ ]]; then
         exit 1
     elif [ $NUM -ne 1 ]; then
         echo "ambigous base file for $1"
+        exit 1
     fi
 else
     echo "unable to parse backup-filename"
