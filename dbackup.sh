@@ -101,7 +101,7 @@ if [ "$NAME" = "" ]; then
     NAME="$(basename "$SOURCE")"
 fi
 
-PREV=$(ls -1 $TARGET/$NAME""_*_*.1.dar 2>/dev/null | egrep '(base|diff).1.dar$' | sort | tail -n 1)
+PREV=$(ls -1 $TARGET/$NAME""_*_*.1.dar 2>/dev/null | egrep '_[^_]+_(base|diff)\.1\.dar$' | sort | tail -n 1)
 
 if [ "$PREV" != "" ]; then
     PREV=$(dirname $PREV)/$(basename $PREV .1.dar)
