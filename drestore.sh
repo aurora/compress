@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if ! command -v dar >/dev/null; then
+    echo "dar not found"
+    exit 1
+fi
+
 if [ "$2" = "" ]; then
     echo "usage: $(basename $0) <backup-file> <target-dir>"
     exit 1

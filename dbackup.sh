@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if ! command -v dar >/dev/null; then
+    echo "dar not found"
+    exit 1
+fi
+
 NO_COMPRESS=(
     "7z"  "ace" "ape"   "apk"  "arc" "arj" "avi" 
     "bz2" "cap" "dar"   "deb"  "dmg" "exe" "flac"
