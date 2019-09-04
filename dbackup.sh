@@ -30,6 +30,8 @@ function showusage {
                 of the specified root directory, but cannot be the same.
 -n, --name      Optional name. Defaults to the name of the specified root
                 directory.
+-m, --mtime     Use mtime of source directory for timestamp instead of
+                current time.
     --skip      Skip test of created archive.
 -h, --help      Display this usage information.
 "
@@ -39,6 +41,8 @@ if [ "$1" = "" ]; then
     showusage
     exit 1
 fi
+
+MTIME=0
 
 while [[ "$1" != "" ]]; do
     case $1 in
@@ -63,6 +67,9 @@ while [[ "$1" != "" ]]; do
         -n|--name)
             NAME="$2"
             shift
+            ;;
+        -m|--mtime)
+            MTIME=1
             ;;
         --skip)
             SKIP=1
@@ -118,7 +125,13 @@ else
     PFIX="_base"
 fi
 
-NAME="$NAME""_$(date -u +"%Y-%m-%dT%H:%M:%SZ")$PFIX"
+if [ $MTIME -eq 1 ]; then
+    TIME=$(date -u -r $SOURCE +"%Y-%m-%dT%H:%M:%SZ")
+else
+    TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+fi
+
+NAME="$NAME""_$TIME$PFIX"
 FILE="$TARGET/$NAME"
 
 echo "Creating archive: $FILE"
